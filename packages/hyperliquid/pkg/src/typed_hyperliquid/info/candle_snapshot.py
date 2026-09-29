@@ -105,7 +105,7 @@ class CandleSnapshot(InfoCore):
   ) -> PaginatedResponse[Candle, tuple[TimestampMillis, list[Candle]]]:
     """Retrieve OHLCV candles for a coin at a given interval over a time range.
 
-    Paged variant of `candle_snapshot`: Walks forwards by moving `start_time` to the latest `t` of each page that came back full, never past the caller's own `end_time` and stops on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
+    Paged variant of `candle_snapshot`: Walks forwards by moving `start_time` to the latest `t` of each page that came back full, never past the caller's own `end_time` (rows beyond it are dropped) and stops once a page reaches the caller's own `end_time`, or on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
 
     The boundary row a venue re-serves is dropped by its `t` value, so no row is duplicated or skipped whichever way the venue bounds its ranges.
 
@@ -147,8 +147,18 @@ class CandleSnapshot(InfoCore):
       )
       rows = response
       keys = [key_of(item) for item in rows]
+      far_key = (
+        None
+        if end_time is None
+        else timestamp_millis.parse(timestamp_millis.dump(end_time))
+      )
       carried_keys = [key_of(item) for item in carried]
-      fresh = [item for item, key in zip(rows, keys) if key not in carried_keys]
+      fresh = [
+        item
+        for item, key in zip(rows, keys)
+        if key not in carried_keys
+        and (far_key is None or key is None or key <= far_key)
+      ]
       values = [key for key in keys if key is not None]
       extreme = max(values) if values else None
       if cap is not None and len(rows) >= cap:
@@ -156,11 +166,17 @@ class CandleSnapshot(InfoCore):
           raise LogicError(
             f'`candle_snapshot_paged` requested from {pos} and the venue returned a full page of {len(rows)} rows all sharing one `t` value; the rest of that value is unreachable and advancing would drop it.'
           )
-        return fresh, (
-          extreme,
-          [item for item, key in zip(rows, keys) if key == extreme],
-        )
-      if cap is None and extreme is not None and extreme != pos:
+        if not (far_key is not None and extreme >= far_key):
+          return fresh, (
+            extreme,
+            [item for item, key in zip(rows, keys) if key == extreme],
+          )
+      elif (
+        cap is None
+        and extreme is not None
+        and extreme != pos
+        and not (far_key is not None and extreme >= far_key)
+      ):
         return fresh, (
           extreme,
           [item for item, key in zip(rows, keys) if key == extreme],
