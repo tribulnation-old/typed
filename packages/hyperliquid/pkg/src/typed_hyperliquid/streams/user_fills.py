@@ -49,6 +49,8 @@ class UserFill(TypedDict):
   """L1 transaction hash."""
   oid: int
   """Order id."""
+  cloid: NotRequired[str]
+  """Client order id of the order this fill belongs to (128-bit hex, `0x` + 32 hex digits). Present only on fills of orders placed with a `cloid`; absent otherwise."""
   crossed: bool
   """Whether the order crossed the spread (was taker)."""
   fee: Decimal

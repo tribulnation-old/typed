@@ -359,7 +359,7 @@ class UserNonFundingLedgerUpdates(InfoCore):
   ]:
     """Retrieve a user's non-funding ledger updates within a time range: deposits, withdrawals, transfers, vault flows, liquidations, staking, and rewards. Responses that take a time range return at most 500 elements or distinct blocks of data; to query a larger range, repeat the call using the last returned entry's `time` as the next `start_time`.
 
-    Paged variant of `user_non_funding_ledger_updates`: Walks forwards by moving `start_time` to the latest `time` of each page that came back full, never past the caller's own `end_time` and stops on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
+    Paged variant of `user_non_funding_ledger_updates`: Walks forwards by moving `start_time` to the latest `time` of each page that came back full, never past the caller's own `end_time` (rows beyond it are dropped) and stops once a page passes the caller's own `end_time`, or on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
 
     Rows sharing the boundary `time` value are re-fetched and dropped by content, so a value shared by more than one row is never duplicated or skipped. Raises `LogicError` if a row already yielded is genuinely missing from the next page (not merely reordered), or if a full page shares one `time` value, since the rest of it would then be unreachable.
 
@@ -398,12 +398,17 @@ class UserNonFundingLedgerUpdates(InfoCore):
       )
       rows = response
       keys = [key_of(item) for item in rows]
+      far_key = (
+        None
+        if end_time is None
+        else timestamp_millis.parse(timestamp_millis.dump(end_time))
+      )
       remaining = list(carried)
       fresh = []
-      for item in rows:
+      for item, key in zip(rows, keys):
         if item in remaining:
           remaining.remove(item)
-        else:
+        elif far_key is None or key is None or key <= far_key:
           fresh.append(item)
       if remaining:
         raise LogicError(
@@ -416,11 +421,17 @@ class UserNonFundingLedgerUpdates(InfoCore):
           raise LogicError(
             f'`user_non_funding_ledger_updates_paged` requested from {pos} and the venue returned a full page of {len(rows)} rows all sharing one `time` value; the rest of that value is unreachable and advancing would drop it.'
           )
-        return fresh, (
-          extreme,
-          [item for item, key in zip(rows, keys) if key == extreme],
-        )
-      if cap is None and extreme is not None and extreme != pos:
+        if not (far_key is not None and extreme > far_key):
+          return fresh, (
+            extreme,
+            [item for item, key in zip(rows, keys) if key == extreme],
+          )
+      elif (
+        cap is None
+        and extreme is not None
+        and extreme != pos
+        and not (far_key is not None and extreme > far_key)
+      ):
         return fresh, (
           extreme,
           [item for item, key in zip(rows, keys) if key == extreme],

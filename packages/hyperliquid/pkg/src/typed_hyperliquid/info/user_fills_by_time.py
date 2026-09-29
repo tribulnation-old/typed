@@ -42,6 +42,8 @@ class UserFill(TypedDict):
   """L1 transaction hash of the fill."""
   oid: int
   """Id of the order that produced this fill."""
+  cloid: NotRequired[str]
+  """Client order id of the order this fill belongs to (128-bit hex, `0x` + 32 hex digits). Present only on fills of orders placed with a `cloid`; absent otherwise."""
   crossed: bool
   """Whether this fill was the taker side of the trade (crossed the book)."""
   fee: Decimal
@@ -74,7 +76,7 @@ class UserFillsByTime(InfoCore):
   ) -> PaginatedResponse[UserFill, tuple[TimestampMillis, list[UserFill]]]:
     """Retrieve a user's fills within a time range. Returns at most 2000 fills per response, and only the 10000 most recent fills are available.
 
-    Paged variant of `user_fills_by_time`: Walks forwards by moving `start_time` to the latest `time` of each page that came back full, never past the caller's own `end_time` and stops on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
+    Paged variant of `user_fills_by_time`: Walks forwards by moving `start_time` to the latest `time` of each page that came back full, never past the caller's own `end_time` (rows beyond it are dropped) and stops once a page passes the caller's own `end_time`, or on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
 
     Rows sharing the boundary `time` value are re-fetched and dropped by content, so a value shared by more than one row is never duplicated or skipped. Raises `LogicError` if a row already yielded is genuinely missing from the next page (not merely reordered), or if a full page shares one `time` value, since the rest of it would then be unreachable.
 
@@ -116,12 +118,17 @@ class UserFillsByTime(InfoCore):
       )
       rows = response
       keys = [key_of(item) for item in rows]
+      far_key = (
+        None
+        if end_time is None
+        else timestamp_millis.parse(timestamp_millis.dump(end_time))
+      )
       remaining = list(carried)
       fresh = []
-      for item in rows:
+      for item, key in zip(rows, keys):
         if item in remaining:
           remaining.remove(item)
-        else:
+        elif far_key is None or key is None or key <= far_key:
           fresh.append(item)
       if remaining:
         raise LogicError(
@@ -134,11 +141,17 @@ class UserFillsByTime(InfoCore):
           raise LogicError(
             f'`user_fills_by_time_paged` requested from {pos} and the venue returned a full page of {len(rows)} rows all sharing one `time` value; the rest of that value is unreachable and advancing would drop it.'
           )
-        return fresh, (
-          extreme,
-          [item for item, key in zip(rows, keys) if key == extreme],
-        )
-      if cap is None and extreme is not None and extreme != pos:
+        if not (far_key is not None and extreme > far_key):
+          return fresh, (
+            extreme,
+            [item for item, key in zip(rows, keys) if key == extreme],
+          )
+      elif (
+        cap is None
+        and extreme is not None
+        and extreme != pos
+        and not (far_key is not None and extreme > far_key)
+      ):
         return fresh, (
           extreme,
           [item for item, key in zip(rows, keys) if key == extreme],
