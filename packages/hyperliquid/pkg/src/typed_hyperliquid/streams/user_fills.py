@@ -71,8 +71,8 @@ class UserFills(TypedDict):
 
   fills: list[UserFill]
   """The fills in this snapshot or update."""
-  isSnapshot: bool
-  """True on the first message (a snapshot of recent fills), false on every following streamed update."""
+  isSnapshot: NotRequired[bool]
+  """When present, true marks the initial snapshot and false marks a streamed update."""
   user: str
   """Address whose fills are reported."""
 
