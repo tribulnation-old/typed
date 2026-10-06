@@ -79,17 +79,17 @@ class List(RpcEndpoint):
       ids: Comma separated order identifiers
       start_time: Date time in ISO 8601 string format
       end_time: Date time in ISO 8601 string format
-      side:
+      side: Filter orders by side.
       symbol: Market symbol
-      order_type:
-      status:
+      order_type: Filter orders by order type.
+      status: Filter orders by status.
       status_ne: Comma separated NOT EQUAL order statuses
       status_in: Comma separated IN order statuses
       status_ni: Comma separated NOT IN order statuses
       limit: The maximum number of orders retrieved
-      offset:
+      offset: The number of records the result should skip, in pages of `limit` size.
       sort: Field name to sort
-      direction:
+      direction: Sort direction applied to the `sort` field.
       client_order_id: Comma separated client order identifiers
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 

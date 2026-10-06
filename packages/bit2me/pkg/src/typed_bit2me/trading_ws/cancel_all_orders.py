@@ -60,7 +60,7 @@ class CancelAllOrders(SocketEndpoint):
     Args:
       event: Command name.
       symbol: Market symbol to scope the cancellation to; omit to cancel across every symbol.
-      side:
+      side: Order direction to scope the cancellation to; omit to cancel both sides.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:
