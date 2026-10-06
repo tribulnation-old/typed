@@ -66,14 +66,14 @@ class List(RpcEndpoint):
     Args:
       ids: Comma separated trade identifiers
       symbol: Market symbol
-      side:
-      order_type:
+      side: Filter trades by side.
+      order_type: Filter trades by the order type that produced them.
       limit: The maximum number of trades to fetch
-      offset:
+      offset: The number of records the result should skip, in pages of `limit` size.
       start_time: Date time in ISO 8601 string format
       end_time: Date time in ISO 8601 string format
       sort: The field to sort
-      direction:
+      direction: Sort direction applied to the `sort` field.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

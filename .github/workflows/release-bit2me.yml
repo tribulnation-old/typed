@@ -44,7 +44,7 @@ jobs:
           python-version: '3.11'
       - run: pip install -e packages/core
       - run: pip install -e packages/bit2me/pkg
-      - run: pip install ruff pyright pytest build
+      - run: pip install ruff pyright pytest pytest-asyncio build
       - run: ruff check --select TID251 packages/bit2me/pkg
       - run: pyright packages/bit2me/pkg
       - run: cp packages/bit2me/README.md packages/bit2me/LICENSE packages/bit2me/pkg/
