@@ -33,7 +33,7 @@ class IsolatedSymbols(RpcEndpoint):
     """List symbols currently in isolated margin mode under the account, private.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

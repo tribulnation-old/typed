@@ -38,7 +38,7 @@ class AdlRank(RpcEndpoint):
     """Get the auto-deleveraging (ADL) rank of each open position, private. A higher rank is deleveraged first when the venue must auto-deleverage counterparties to a liquidation.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

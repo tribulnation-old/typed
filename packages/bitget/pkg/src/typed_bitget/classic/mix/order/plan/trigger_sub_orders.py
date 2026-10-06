@@ -43,9 +43,9 @@ class TriggerSubOrders(RpcEndpoint):
     """List the child orders a triggered plan/track order has produced, private.
 
     Args:
-      plan_type:
+      plan_type: Plan order kind the parent order was.
       plan_order_id: Parent plan order ID.
-      product_type:
+      product_type: Which futures product family this order concerns.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

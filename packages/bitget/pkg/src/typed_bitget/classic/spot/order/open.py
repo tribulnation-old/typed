@@ -95,7 +95,7 @@ class Open(RpcEndpoint):
       id_less_than: Pagination cursor: return entries with an id less than this value (a `orderId`/`billId`/`tradeId` read out of the last row of the previous page).
       limit: Number of orders to return.
       order_id: Restrict to a single order ID.
-      tpsl_type:
+      tpsl_type: Restrict to normal orders or TP/SL orders.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

@@ -96,7 +96,7 @@ class FillHistory(RpcEndpoint):
     Args:
       order_id: Restrict to one order's fills.
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this order concerns.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
       limit: Rows per page. Defaults to 100.
@@ -141,7 +141,7 @@ class FillHistory(RpcEndpoint):
     Args:
       order_id: Restrict to one order's fills.
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this order concerns.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
       id_less_than: Pagination cursor: return fills with a fill ID before this one. Pass the last page's `endId` to walk further back.

@@ -65,7 +65,7 @@ class HistoricTrades(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. `"BTCUSDT"`.
-      product_type:
+      product_type: Which futures product family this request concerns.
       limit: Number of trades per page. Range [1, 1000]; defaults to 100.
       id_less_than: Pagination cursor: return trades with a trade ID before this one. Pass the last page's oldest `tradeId` to walk further back.
       start_time: Window lower bound, inclusive.
@@ -136,7 +136,7 @@ class HistoricTrades(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. `"BTCUSDT"`.
-      product_type:
+      product_type: Which futures product family this request concerns.
       limit: Number of trades per page. Range [1, 1000]; defaults to 100.
       id_less_than: Pagination cursor: return trades with a trade ID before this one. Pass the last page's oldest `tradeId` to walk further back.
       start_time: Window lower bound, inclusive.

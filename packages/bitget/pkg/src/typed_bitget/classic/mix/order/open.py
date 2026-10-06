@@ -127,7 +127,7 @@ class Open(RpcEndpoint):
       order_id: Restrict to one order.
       client_oid: Restrict to one order, by client order ID.
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this order concerns.
       status: Restrict to one order status.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
@@ -178,7 +178,7 @@ class Open(RpcEndpoint):
       order_id: Restrict to one order.
       client_oid: Restrict to one order, by client order ID.
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this order concerns.
       status: Restrict to one order status.
       id_less_than: Pagination cursor: return orders with an order ID before this one. Pass the last page's `endId` to walk further back.
       start_time: Window lower bound, inclusive.

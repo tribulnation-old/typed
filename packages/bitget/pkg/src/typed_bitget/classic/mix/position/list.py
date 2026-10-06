@@ -27,7 +27,7 @@ class List(RpcEndpoint):
     """List all open positions for a product type, private.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       margin_coin: Restrict to one margin coin, e.g. "USDT".
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 

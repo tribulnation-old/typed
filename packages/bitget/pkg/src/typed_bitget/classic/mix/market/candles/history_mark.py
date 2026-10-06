@@ -50,17 +50,17 @@ class HistoryMark(RpcEndpoint):
   ) -> PaginatedResponse[MixCandle, tuple[TimestampMillis | None, list[MixCandle]]]:
     """Get historical mark price candlesticks for one symbol, further back than `candles` retains, public.
 
-    Paged variant of `history_mark`: Walks backwards by moving `end_time` to the earliest `[0]` of each page that came back full, never past the caller's own `start_time` and stops on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
+    Paged variant of `history_mark`: Walks backwards by moving `end_time` to the earliest `[0]` of each page that came back full, never past the caller's own `start_time` (rows beyond it are dropped) and stops once a page reaches the caller's own `start_time`, or on the first page shorter than the venue's row cap. Awaitable (flattens every page) or async-iterable (one page at a time).
 
     The boundary row a venue re-serves is dropped by its `[0]` value, so no row is duplicated or skipped whichever way the venue bounds its ranges.
 
     Args:
       symbol: Futures symbol, e.g. `"BTCUSDT"`.
-      product_type:
-      granularity:
+      product_type: Which futures product family this request concerns.
+      granularity: Candlestick interval.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
-      k_line_type:
+      k_line_type: Which price series to build candles from. Defaults to `"MARKET"`.
       limit: Number of candles to return. Range [1, 200]; defaults to 100. Bitget's own docs state "Default: 1000. Maximum: 100" (self-contradictory) or, per the api-doc redirect target (a generic landing page, not usable as a citation), nothing resolvable at all -- measured live 2026-09-08 (BTCUSDT, USDT-FUTURES, 1H): limit=200 succeeds, limit=201 fails with 40053 "Value range verification failed: limit should be between 1~200" (the venue's own error message states the real bound), and omitting limit returns exactly 100 rows, confirming the default.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
@@ -98,8 +98,18 @@ class HistoryMark(RpcEndpoint):
       )
       rows = response
       keys = [key_of(item) for item in rows]
+      far_key = (
+        None
+        if start_time is None
+        else timestamp_millis.parse(timestamp_millis.dump(start_time))
+      )
       carried_keys = [key_of(item) for item in carried]
-      fresh = [item for item, key in zip(rows, keys) if key not in carried_keys]
+      fresh = [
+        item
+        for item, key in zip(rows, keys)
+        if key not in carried_keys
+        and (far_key is None or key is None or key >= far_key)
+      ]
       values = [key for key in keys if key is not None]
       extreme = min(values) if values else None
       if cap is not None and len(rows) >= cap:
@@ -107,11 +117,17 @@ class HistoryMark(RpcEndpoint):
           raise LogicError(
             f'`history_mark_paged` requested from {pos} and the venue returned a full page of {len(rows)} rows all sharing one `[0]` value; the rest of that value is unreachable and advancing would drop it.'
           )
-        return fresh, (
-          extreme,
-          [item for item, key in zip(rows, keys) if key == extreme],
-        )
-      if cap is None and extreme is not None and extreme != pos:
+        if not (far_key is not None and extreme <= far_key):
+          return fresh, (
+            extreme,
+            [item for item, key in zip(rows, keys) if key == extreme],
+          )
+      elif (
+        cap is None
+        and extreme is not None
+        and extreme != pos
+        and not (far_key is not None and extreme <= far_key)
+      ):
         return fresh, (
           extreme,
           [item for item, key in zip(rows, keys) if key == extreme],
@@ -136,11 +152,11 @@ class HistoryMark(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. `"BTCUSDT"`.
-      product_type:
-      granularity:
+      product_type: Which futures product family this request concerns.
+      granularity: Candlestick interval.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
-      k_line_type:
+      k_line_type: Which price series to build candles from. Defaults to `"MARKET"`.
       limit: Number of candles to return. Range [1, 200]; defaults to 100. Bitget's own docs state "Default: 1000. Maximum: 100" (self-contradictory) or, per the api-doc redirect target (a generic landing page, not usable as a citation), nothing resolvable at all -- measured live 2026-09-08 (BTCUSDT, USDT-FUTURES, 1H): limit=200 succeeds, limit=201 fails with 40053 "Value range verification failed: limit should be between 1~200" (the venue's own error message states the real bound), and omitting limit returns exactly 100 rows, confirming the default.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 

@@ -50,7 +50,7 @@ class Orderbook(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. `"BTCUSDT"`.
-      product_type:
+      product_type: Which futures product family this request concerns.
       precision: Price-precision level to merge the book to; each step merges price levels one decimal place coarser. Defaults to the symbol's tick size (`"scale0"`).
       limit: Number of price levels per side. Defaults to `"100"`.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
