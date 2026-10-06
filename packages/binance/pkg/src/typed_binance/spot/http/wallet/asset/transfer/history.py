@@ -70,7 +70,7 @@ class History(RpcEndpoint):
     Paged variant of `history`: Requests `current` from 1 upwards and stops once it has covered the `total` items the response reports, or on an empty page. Awaitable (flattens every page) or async-iterable (one page at a time).
 
     Args:
-      type:
+      type: Universal transfer direction to filter by.
       start_time: Query period start, as milliseconds since epoch. Defaults to 7 days before now when both this and `endTime` are omitted.
       end_time: Query period end, as milliseconds since epoch.
       size: Number of records per page. Max 100.
@@ -123,7 +123,7 @@ class History(RpcEndpoint):
     """Query history of universal transfers made via `spot.wallet.asset.transfer.create`. Queryable within the last 6 months only; when `startTime`/`endTime` are omitted, the last 7 days are returned by default.
 
     Args:
-      type:
+      type: Universal transfer direction to filter by.
       start_time: Query period start, as milliseconds since epoch. Defaults to 7 days before now when both this and `endTime` are omitted.
       end_time: Query period end, as milliseconds since epoch.
       current: Page to fetch, 1-indexed.
