@@ -24,7 +24,7 @@ class Tickers(RpcEndpoint):
     """List 24h ticker snapshots for every symbol of a product type, public.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

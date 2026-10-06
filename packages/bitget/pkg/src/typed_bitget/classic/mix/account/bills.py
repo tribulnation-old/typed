@@ -78,7 +78,7 @@ class Bills(RpcEndpoint):
     Paged variant of `bills`: Passes each page's token back as `idLessThan` and stops when a response carries no `endId`. Awaitable (flattens every page) or async-iterable (one page at a time).
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
       coin: Restrict to one coin, e.g. "USDT".
       business_type: Restrict to one ledger entry type, e.g. a funding-fee or transfer category. Venue does not publish a closed set for this field.
@@ -126,7 +126,7 @@ class Bills(RpcEndpoint):
     """List futures account ledger entries (funding, fees, transfers, PnL settlement, etc.), private.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
       coin: Restrict to one coin, e.g. "USDT".
       business_type: Restrict to one ledger entry type, e.g. a funding-fee or transfer category. Venue does not publish a closed set for this field.

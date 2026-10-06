@@ -67,7 +67,7 @@ class Records(RpcEndpoint):
 
     Args:
       coin: Restrict to a single coin.
-      from_type:
+      from_type: Restrict to transfers originating from this product account.
       start_time: Range start, Unix millisecond timestamp.
       end_time: Range end, Unix millisecond timestamp.
       client_oid: Restrict to a single transfer by its client-supplied ID.

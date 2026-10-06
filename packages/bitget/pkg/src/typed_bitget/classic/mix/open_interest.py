@@ -45,7 +45,7 @@ class OpenInterest(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this request concerns.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

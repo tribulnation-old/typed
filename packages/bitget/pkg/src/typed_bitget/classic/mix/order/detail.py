@@ -106,7 +106,7 @@ class Detail(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this order concerns.
       order_id: Order ID to look up. Either this or `clientOid` is required.
       client_oid: Client order ID to look up. Either this or `orderId` is required.
       validate: Override this call's response validation; falls back to the client-level default when omitted.

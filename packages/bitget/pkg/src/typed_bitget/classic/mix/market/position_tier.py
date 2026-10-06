@@ -45,7 +45,7 @@ class PositionTier(RpcEndpoint):
     """List a symbol's position-tier ladder, public. Each tier states the maximum leverage and maintenance-margin rate for a range of position sizes.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       symbol: Futures symbol, e.g. "BTCUSDT".
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 

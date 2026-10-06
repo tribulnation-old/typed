@@ -49,7 +49,7 @@ class RateHistory(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this request concerns.
       page_size: Rows per page. Defaults to 20.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
@@ -87,7 +87,7 @@ class RateHistory(RpcEndpoint):
 
     Args:
       symbol: Futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this request concerns.
       page_size: Rows per page. Defaults to 20.
       page_no: Page number, starting at 1. Defaults to 1.
       validate: Override this call's response validation; falls back to the client-level default when omitted.

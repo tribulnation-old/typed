@@ -39,7 +39,7 @@ class OiLimit(RpcEndpoint):
     """Get open-interest notional limits, public. Returns every symbol of the product type when `symbol` is omitted.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       symbol: Restrict to a single symbol, e.g. "BTCUSDT".
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 

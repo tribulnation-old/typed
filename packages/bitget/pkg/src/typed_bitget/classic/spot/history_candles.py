@@ -57,7 +57,7 @@ class HistoryCandles(RpcEndpoint):
 
     Args:
       symbol: Trading pair symbol, e.g. `BTCUSDT`.
-      granularity:
+      granularity: Candlestick interval.
       end_time: Range end, Unix millisecond timestamp. Candles strictly before this time are returned (confirmed live: the candle whose open time equals `endTime` is excluded).
       limit: Number of candles to return.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
@@ -162,7 +162,7 @@ class HistoryCandles(RpcEndpoint):
 
     Args:
       symbol: Trading pair symbol, e.g. `BTCUSDT`.
-      granularity:
+      granularity: Candlestick interval.
       end_time: Range end, Unix millisecond timestamp. Candles strictly before this time are returned (confirmed live: the candle whose open time equals `endTime` is excluded).
       limit: Number of candles to return.
       validate: Override this call's response validation; falls back to the client-level default when omitted.

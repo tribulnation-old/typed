@@ -60,7 +60,7 @@ class SubAccountAssets(RpcEndpoint):
     """List futures account assets for every sub-account under the main account, private.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

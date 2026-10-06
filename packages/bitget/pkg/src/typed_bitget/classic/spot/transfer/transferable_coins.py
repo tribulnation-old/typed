@@ -27,8 +27,8 @@ class TransferableCoins(RpcEndpoint):
     """List coins that can be transferred between two given product accounts.
 
     Args:
-      from_type:
-      to_type:
+      from_type: Source product account.
+      to_type: Destination product account.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:

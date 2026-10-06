@@ -30,7 +30,7 @@ class Get(RpcEndpoint):
     """Get open positions for one symbol, private. A hedge-mode symbol may return both a long and a short row.
 
     Args:
-      product_type:
+      product_type: Which futures product family this request concerns.
       symbol: Futures symbol, e.g. "BTCUSDT".
       margin_coin: Margin coin, e.g. "USDT".
       validate: Override this call's response validation; falls back to the client-level default when omitted.

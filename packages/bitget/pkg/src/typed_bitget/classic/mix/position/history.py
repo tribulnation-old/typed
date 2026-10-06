@@ -88,7 +88,7 @@ class History(RpcEndpoint):
 
     Args:
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this request concerns.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
       limit: Rows per page. Defaults to 20.
@@ -132,7 +132,7 @@ class History(RpcEndpoint):
 
     Args:
       symbol: Restrict to one futures symbol, e.g. "BTCUSDT".
-      product_type:
+      product_type: Which futures product family this request concerns.
       id_less_than: Pagination cursor: return positions closed before this position ID. Pass the last page's oldest `positionId` to walk further back.
       start_time: Window lower bound, inclusive.
       end_time: Window upper bound, inclusive.
