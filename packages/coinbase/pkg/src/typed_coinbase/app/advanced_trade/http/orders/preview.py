@@ -535,13 +535,13 @@ class Preview(RpcEndpoint):
     Args:
       product_id: Trading pair to preview, e.g. `BTC-USD`.
       side: Trade direction.
-      order_configuration:
+      order_configuration: Order type and its sizing/pricing parameters.
       leverage: Leverage to apply; defaults to `"1.0"`.
       margin_type: Cross or isolated margin; defaults to `CROSS`.
       retail_portfolio_id: Deprecated portfolio association; legacy keys only.
-      attached_order_configuration:
-      equity_order_metadata:
-      prediction_metadata:
+      attached_order_configuration: A bracket order to preview attaching; only `trigger_bracket_gtc` is eligible, and its `base_size` must be omitted.
+      equity_order_metadata: Equity-specific trading session and time-in-force instructions.
+      prediction_metadata: Metadata for previewing a prediction-market order.
       cost_basis_method: Tax lot matching method.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
