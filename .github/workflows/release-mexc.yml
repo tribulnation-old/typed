@@ -44,7 +44,7 @@ jobs:
           python-version: '3.11'
       - run: pip install -e packages/core
       - run: pip install -e packages/mexc/pkg
-      - run: pip install ruff pyright pytest build
+      - run: pip install ruff pyright pytest pytest-asyncio build
       - run: ruff check --select TID251 packages/mexc/pkg
       - run: pyright packages/mexc/pkg
       - run: cp packages/mexc/README.md packages/mexc/LICENSE packages/mexc/pkg/
