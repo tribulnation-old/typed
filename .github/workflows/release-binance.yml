@@ -44,7 +44,7 @@ jobs:
           python-version: '3.11'
       - run: pip install -e packages/core
       - run: pip install -e packages/binance/pkg
-      - run: pip install ruff pyright pytest build
+      - run: pip install ruff pyright pytest pytest-asyncio build
       - run: ruff check --select TID251 packages/binance/pkg
       - run: pyright packages/binance/pkg
       - run: cp packages/binance/README.md packages/binance/LICENSE packages/binance/pkg/
