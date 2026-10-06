@@ -34,7 +34,7 @@ class MoveFunds(RpcEndpoint):
     """Move funds between two of the calling user's portfolios.
 
     Args:
-      funds:
+      funds: The amount to move to the target portfolio.
       source_portfolio_uuid: Id of the portfolio to move funds from.
       target_portfolio_uuid: Id of the portfolio to move funds to.
       validate: Override this call's response validation; falls back to the client-level default when omitted.

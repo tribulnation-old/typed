@@ -106,16 +106,16 @@ class Create(RpcEndpoint):
       client_order_id: A caller-supplied unique id for this order, used to identify it independently of the order id Coinbase assigns. Replaying the same id returns the original order instead of creating a new one.
       product_id: Trading pair to place the order on, e.g. `BTC-USD`. For equities, use the canonical id from the Products API, not the display ticker.
       side: Trade direction.
-      order_configuration:
+      order_configuration: Order type and its sizing/pricing parameters.
       leverage: Leverage to apply; defaults to `"1.0"`.
       margin_type: Cross or isolated margin; defaults to `CROSS`.
       retail_portfolio_id: Deprecated portfolio association; legacy keys only. CDP keys default to the key's permissioned portfolio.
       preview_id: Id from a prior `preview` call this order is confirming.
-      attached_order_configuration:
+      attached_order_configuration: A bracket (take-profit/stop-loss) order to attach; only `trigger_bracket_gtc` is eligible, and its `base_size` must be omitted (it inherits the parent order's size).
       sor_preference: Smart Order Routing preference; `SOR_PREFERENCE_UNSPECIFIED` uses the account's default behavior.
       cost_basis_method: Tax lot matching method.
-      equity_order_metadata:
-      prediction_metadata:
+      equity_order_metadata: Equity-specific trading session and time-in-force instructions.
+      prediction_metadata: Metadata for a prediction-market order.
       validate: Override this call's response validation; falls back to the client-level default when omitted.
 
     References:
