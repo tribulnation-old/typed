@@ -101,6 +101,8 @@ class Wallet:
 
   key_pair: KeyPair
   """Secp256k1 key pair used for signing."""
+  account: str | None = None
+  """Account the key signs for when it is an API wallet (permissioned key) of another account."""
   account_number: int = 0
   """Cosmos account number used in direct-sign documents."""
   sequence: int = 0
@@ -108,12 +110,13 @@ class Wallet:
 
   @classmethod
   def from_mnemonic(
-    cls, mnemonic: str, *, account_number: int = 0, sequence: int = 0,
+    cls, mnemonic: str, *, account: str | None = None, account_number: int = 0, sequence: int = 0,
   ) -> 'Wallet':
     """Create a wallet from a mnemonic.
 
     Args:
       mnemonic: BIP-39 mnemonic phrase.
+      account: Account address the key signs for, when it is an API wallet of another account.
       account_number: Cosmos account number to attach to the wallet.
       sequence: Cosmos account sequence to attach to the wallet.
 
@@ -122,16 +125,20 @@ class Wallet:
     """
     return cls(
       key_pair=KeyPair.from_mnemonic(mnemonic),
+      account=account,
       account_number=account_number,
       sequence=sequence,
     )
 
   @classmethod
-  def from_hex(cls, value: str, *, account_number: int = 0, sequence: int = 0) -> 'Wallet':
+  def from_hex(
+    cls, value: str, *, account: str | None = None, account_number: int = 0, sequence: int = 0,
+  ) -> 'Wallet':
     """Create a wallet from a hex private key.
 
     Args:
       value: Hex-encoded private key, with or without a `0x` prefix.
+      account: Account address the key signs for, when it is an API wallet of another account.
       account_number: Cosmos account number to attach to the wallet.
       sequence: Cosmos account sequence to attach to the wallet.
 
@@ -140,9 +147,19 @@ class Wallet:
     """
     return cls(
       key_pair=KeyPair.from_hex(value),
+      account=account,
       account_number=account_number,
       sequence=sequence,
     )
+
+  @property
+  def is_api_wallet(self) -> bool:
+    """Return whether the key signs for another account through an authenticator.
+
+    Returns:
+      Whether `account` is set and differs from the key's own address.
+    """
+    return self.account is not None and self.account != self.key_address
 
   @property
   def public_key(self) -> secp256k1.PubKey:
@@ -155,10 +172,19 @@ class Wallet:
 
   @property
   def address(self) -> str:
-    """Return the dYdX bech32 account address.
+    """Return the dYdX account address the wallet signs for.
 
     Returns:
-      dYdX bech32 account address derived from the compressed public key.
+      `account` when set, otherwise the address derived from the key.
+    """
+    return self.account or self.key_address
+
+  @property
+  def key_address(self) -> str:
+    """Return the dYdX bech32 address derived from the wallet key.
+
+    Returns:
+      dYdX bech32 address derived from the compressed public key.
     """
     sha256_hash = hashlib.sha256(self.key_pair.public_key_bytes).digest()
     ripemd160_hash = RIPEMD160.new(sha256_hash).digest()
@@ -190,6 +216,7 @@ class Wallet:
     """
     return Wallet(
       key_pair=self.key_pair,
+      account=self.account,
       account_number=account_number,
       sequence=sequence,
     )

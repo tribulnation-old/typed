@@ -102,6 +102,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'Indexer | None' = None,
     chain: 'Chain | None' = None,
     public: bool = False,
@@ -116,6 +117,7 @@ class DydxBase:
     Args:
       mnemonic: Optional wallet mnemonic.
       private_key: Optional hex private key, instead of `mnemonic`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       indexer: Indexer HTTP and WebSocket client. Defaults to the OEGS mainnet indexer.
       chain: Chain client shared by `chain` and `node`. Defaults to the OEGS mainnet chain.
       public: Allow construction without a wallet for read-only workflows.
@@ -138,6 +140,7 @@ class DydxBase:
       usdc_denom=usdc_denom,
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       mnemonic_env=mnemonic_env,
       private_key_env=private_key_env,
@@ -157,6 +160,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -169,6 +173,7 @@ class DydxBase:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       indexer: Optional indexer transport overrides.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
@@ -181,6 +186,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.oegs(modules=modules, comet=comet),
       public=public,
@@ -193,6 +199,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -205,6 +212,7 @@ class DydxBase:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       indexer: Optional indexer transport overrides.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
@@ -214,6 +222,7 @@ class DydxBase:
     return cls.oegs(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=indexer,
       modules=modules,
       comet=comet,
@@ -227,6 +236,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -240,6 +250,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.polkachu(modules=modules, comet=comet),
       public=public,
@@ -252,6 +263,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -265,6 +277,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.kingnodes(modules=modules, comet=comet),
       public=public,
@@ -277,6 +290,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -290,6 +304,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.enigma(modules=modules, comet=comet),
       public=public,
@@ -302,6 +317,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -315,6 +331,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.polkachu_archive(modules=modules, comet=comet),
       public=public,
@@ -327,6 +344,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -340,6 +358,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.kingnodes_archive(modules=modules, comet=comet),
       public=public,
@@ -352,6 +371,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -365,6 +385,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.enigma_archive(modules=modules, comet=comet),
       public=public,
@@ -377,6 +398,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -390,6 +412,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.testnet(**(indexer or {})),
       chain=Chain.testnet_oegs(modules=modules, comet=comet),
       public=public,
@@ -406,6 +429,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -416,6 +440,7 @@ class DydxBase:
     return cls.testnet_kingnodes(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=indexer,
       modules=modules,
       comet=comet,
@@ -429,6 +454,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -442,6 +468,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.testnet(**(indexer or {})),
       chain=Chain.testnet_kingnodes(modules=modules, comet=comet),
       public=public,
@@ -458,6 +485,7 @@ class DydxBase:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -471,6 +499,7 @@ class DydxBase:
     return cls.new(
       mnemonic,
       private_key=private_key,
+      address=address,
       indexer=Indexer.testnet(**(indexer or {})),
       chain=Chain.testnet_polkachu(modules=modules, comet=comet),
       public=public,
