@@ -7,15 +7,18 @@ These are the environment variables read by dYdX wallet-aware constructors.
 ```bash
 DYDX_MNEMONIC=
 DYDX_TESTNET_MNEMONIC=
+DYDX_PRIVATE_KEY=
+DYDX_TESTNET_PRIVATE_KEY=
 ```
 
 ## Guidance
 
 - keep local values in an untracked `.env` file if needed
 - load them explicitly in scripts and notebooks
-- pass `public=True` when constructing read-only clients without a mnemonic
-- mainnet node constructors read `DYDX_MNEMONIC`
-- testnet node constructors read `DYDX_TESTNET_MNEMONIC`
+- pass `public=True` when constructing read-only clients without a wallet
+- mainnet node constructors read `DYDX_MNEMONIC` or `DYDX_PRIVATE_KEY`
+- testnet node constructors read `DYDX_TESTNET_MNEMONIC` or `DYDX_TESTNET_PRIVATE_KEY`
+- set only one wallet variable per network; both at once raises `AuthError`
 
 ## HTTP Proxy Environment
 

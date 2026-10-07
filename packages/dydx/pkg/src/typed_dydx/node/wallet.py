@@ -68,12 +68,12 @@ class KeyPair:
     """Create a key pair from a hex private key.
 
     Args:
-      value: Hex-encoded private key.
+      value: Hex-encoded private key, with or without a `0x` prefix.
 
     Returns:
       Secp256k1 key pair for Cosmos signing.
     """
-    return cls(PrivateKey.from_hex(value))
+    return cls(PrivateKey.from_hex(value.removeprefix('0x')))
 
   @property
   def public_key_bytes(self) -> bytes:
@@ -131,7 +131,7 @@ class Wallet:
     """Create a wallet from a hex private key.
 
     Args:
-      value: Hex-encoded private key.
+      value: Hex-encoded private key, with or without a `0x` prefix.
       account_number: Cosmos account number to attach to the wallet.
       sequence: Cosmos account sequence to attach to the wallet.
 

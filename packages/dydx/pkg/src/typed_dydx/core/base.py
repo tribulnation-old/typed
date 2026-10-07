@@ -101,6 +101,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'Indexer | None' = None,
     chain: 'Chain | None' = None,
     public: bool = False,
@@ -108,18 +109,23 @@ class DydxBase:
     usdc_denom: str = DYDX_MAINNET_USDC_DENOM,
     memo: str = '',
     mnemonic_env: str = 'DYDX_MNEMONIC',
+    private_key_env: str = 'DYDX_PRIVATE_KEY',
   ) -> Self:
     """Create a dYdX client base from existing indexer and chain clients.
 
     Args:
-      mnemonic: Optional wallet mnemonic. When omitted, `mnemonic_env` is read.
+      mnemonic: Optional wallet mnemonic.
+      private_key: Optional hex private key, instead of `mnemonic`.
       indexer: Indexer HTTP and WebSocket client. Defaults to the OEGS mainnet indexer.
       chain: Chain client shared by `chain` and `node`. Defaults to the OEGS mainnet chain.
       public: Allow construction without a wallet for read-only workflows.
       chain_id: Cosmos chain ID included in transaction sign docs.
       usdc_denom: USDC denomination used when building transaction fees.
       memo: Default transaction memo used when signing.
-      mnemonic_env: Environment variable consulted when `mnemonic` is omitted.
+      mnemonic_env: Mnemonic environment variable consulted when neither `mnemonic` nor
+        `private_key` is passed.
+      private_key_env: Private key environment variable consulted when neither `mnemonic`
+        nor `private_key` is passed.
     """
     from typed_dydx.chain import Chain
     from typed_dydx.indexer import Indexer
@@ -131,8 +137,10 @@ class DydxBase:
       chain_id=chain_id,
       usdc_denom=usdc_denom,
       mnemonic=mnemonic,
+      private_key=private_key,
       public=public,
       mnemonic_env=mnemonic_env,
+      private_key_env=private_key_env,
       memo=memo,
     )
     return cls(
@@ -148,6 +156,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -158,10 +167,12 @@ class DydxBase:
 
     Args:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
+      private_key: Optional hex private key, instead of `mnemonic`. Falls back to
+        `DYDX_PRIVATE_KEY`.
       indexer: Optional indexer transport overrides.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
-      public: Allow read-only construction without a mnemonic.
+      public: Allow read-only construction without a wallet.
       memo: Default transaction memo used when signing.
     """
     from typed_dydx.chain import Chain
@@ -169,6 +180,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.oegs(modules=modules, comet=comet),
       public=public,
@@ -180,6 +192,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -190,14 +203,22 @@ class DydxBase:
 
     Args:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
+      private_key: Optional hex private key, instead of `mnemonic`. Falls back to
+        `DYDX_PRIVATE_KEY`.
       indexer: Optional indexer transport overrides.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
-      public: Allow read-only construction without a mnemonic.
+      public: Allow read-only construction without a wallet.
       memo: Default transaction memo used when signing.
     """
     return cls.oegs(
-      mnemonic, indexer=indexer, modules=modules, comet=comet, public=public, memo=memo
+      mnemonic,
+      private_key=private_key,
+      indexer=indexer,
+      modules=modules,
+      comet=comet,
+      public=public,
+      memo=memo,
     )
 
   @classmethod
@@ -205,6 +226,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -217,6 +239,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.polkachu(modules=modules, comet=comet),
       public=public,
@@ -228,6 +251,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -240,6 +264,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.kingnodes(modules=modules, comet=comet),
       public=public,
@@ -251,6 +276,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -263,6 +289,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.enigma(modules=modules, comet=comet),
       public=public,
@@ -274,6 +301,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -286,6 +314,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.polkachu_archive(modules=modules, comet=comet),
       public=public,
@@ -297,6 +326,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -309,6 +339,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.kingnodes_archive(modules=modules, comet=comet),
       public=public,
@@ -320,6 +351,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -332,6 +364,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.mainnet(**(indexer or {})),
       chain=Chain.enigma_archive(modules=modules, comet=comet),
       public=public,
@@ -343,6 +376,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -355,6 +389,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.testnet(**(indexer or {})),
       chain=Chain.testnet_oegs(modules=modules, comet=comet),
       public=public,
@@ -362,6 +397,7 @@ class DydxBase:
       usdc_denom=DYDX_TESTNET_USDC_DENOM,
       memo=memo,
       mnemonic_env='DYDX_TESTNET_MNEMONIC',
+      private_key_env='DYDX_TESTNET_PRIVATE_KEY',
     )
 
   @classmethod
@@ -369,6 +405,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -378,6 +415,7 @@ class DydxBase:
     """Create the default testnet dYdX client (KingNodes chain endpoints)."""
     return cls.testnet_kingnodes(
       mnemonic,
+      private_key=private_key,
       indexer=indexer,
       modules=modules,
       comet=comet,
@@ -390,6 +428,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -402,6 +441,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.testnet(**(indexer or {})),
       chain=Chain.testnet_kingnodes(modules=modules, comet=comet),
       public=public,
@@ -409,6 +449,7 @@ class DydxBase:
       usdc_denom=DYDX_TESTNET_USDC_DENOM,
       memo=memo,
       mnemonic_env='DYDX_TESTNET_MNEMONIC',
+      private_key_env='DYDX_TESTNET_PRIVATE_KEY',
     )
 
   @classmethod
@@ -416,6 +457,7 @@ class DydxBase:
     cls,
     mnemonic: str | None = None,
     *,
+    private_key: str | None = None,
     indexer: 'IndexerOptions | None' = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
@@ -428,6 +470,7 @@ class DydxBase:
 
     return cls.new(
       mnemonic,
+      private_key=private_key,
       indexer=Indexer.testnet(**(indexer or {})),
       chain=Chain.testnet_polkachu(modules=modules, comet=comet),
       public=public,
@@ -435,4 +478,5 @@ class DydxBase:
       usdc_denom=DYDX_TESTNET_USDC_DENOM,
       memo=memo,
       mnemonic_env='DYDX_TESTNET_MNEMONIC',
+      private_key_env='DYDX_TESTNET_PRIVATE_KEY',
     )
