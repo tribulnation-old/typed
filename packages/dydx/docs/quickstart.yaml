@@ -13,7 +13,7 @@
 
 env_setup:
   body: >-
-    Create a `.env` with your wallet mnemonic — see
+    Create a `.env` with your wallet mnemonic (or `DYDX_PRIVATE_KEY`) — see
     [wallet setup](/typed/dydx/authenticated-setup) for where to get one.
   code: |
     # .env
