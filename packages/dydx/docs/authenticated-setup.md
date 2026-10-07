@@ -51,6 +51,23 @@ When neither is passed, mainnet constructors read `DYDX_MNEMONIC` or
 `DYDX_PRIVATE_KEY`, and testnet constructors read `DYDX_TESTNET_MNEMONIC` or
 `DYDX_TESTNET_PRIVATE_KEY`.
 
+## API Wallets
+
+The dYdX website can create API wallets: a separate key, registered on your
+account, that may only place and cancel orders. It gives you an address (your
+account) and a private key. Pass both:
+
+```python
+from typed_dydx import Dydx
+
+async with Dydx.mainnet(private_key='0x...', address='dydx1...') as client:
+  ...
+```
+
+Orders are then placed for `address`, signed by the API wallet key. The client
+finds the matching authenticator on the account when the wallet first loads,
+and raises `AuthError` if the key is not registered on that account.
+
 ## Write Workflows
 
 Order placement, cancellation, and raw transaction signing require a wallet.

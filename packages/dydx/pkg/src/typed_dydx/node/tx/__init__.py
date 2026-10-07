@@ -10,6 +10,7 @@ from typed_dydx.protos.any import pack_cosmos_any
 from typed_dydx.protos.cosmos.base import v1beta1 as coin_proto
 from typed_dydx.protos.cosmos.tx import v1beta1 as tx_proto
 from typed_dydx.protos.cosmos.tx.signing import v1beta1 as signing_proto
+from typed_dydx.protos.dydxprotocol import accountplus
 from typed_dydx.node.context import NodeContext
 from typed_dydx.node.wallet import Wallet
 
@@ -110,9 +111,13 @@ class Tx:
     signing_wallet = wallet or self.context.require_wallet()
     sequence = options.sequence if options else signing_wallet.sequence
     account_number = options.account_number if options else signing_wallet.account_number
+    authenticator_id = self.context.wallet_state.authenticator_id if wallet is None else None
     body = tx_proto.TxBody(
       messages=[pack_cosmos_any(message) for message in messages],
       memo=self.context.memo if memo is None else memo,
+      non_critical_extension_options=[
+        pack_cosmos_any(accountplus.TxExtension(selected_authenticators=[authenticator_id]))
+      ] if authenticator_id is not None else [],
     )
     auth_info = tx_proto.AuthInfo(
       signer_infos=[self.signer_info(signing_wallet, sequence=sequence)],

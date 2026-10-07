@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typed_core.exceptions import AuthError, BadRequest
 
 from typed_dydx.chain import Chain
+from typed_dydx.node.authenticators import find_authenticator_id
 from typed_dydx.node.wallet import Wallet
 from typed_dydx.protos.any import unpack_expected
 from typed_dydx.protos.cosmos.auth import v1beta1 as auth_proto
@@ -18,6 +19,8 @@ class WalletState:
   """Wallet key material plus the latest account number and sequence."""
   account_loaded: bool = False
   """Whether account metadata has been loaded from chain for this wallet."""
+  authenticator_id: int | None = None
+  """Authenticator through which an API wallet signs, resolved on first account load."""
   lock: asyncio.Lock = field(default_factory=asyncio.Lock, repr=False)
   """Per-wallet broadcast lock that preserves consecutive sequence usage."""
 
@@ -90,12 +93,18 @@ class NodeContext:
   async def refresh_wallet(self):
     """Load account number and sequence for the configured wallet.
 
+    For an API wallet, this also resolves the authenticator it signs through, once.
+
     Raises:
       AuthError: Raised when the node was constructed without a wallet.
       BadRequest: Raised when the auth query does not return a supported base
         account payload.
     """
     wallet = self.require_wallet()
+    if wallet.is_api_wallet and self.wallet_state.authenticator_id is None:
+      self.wallet_state.authenticator_id = await find_authenticator_id(
+        self.chain, account=wallet.address, public_key=wallet.key_pair.public_key_bytes
+      )
     response = await self.chain.auth.account(wallet.address)
     if response.account is None:
       raise BadRequest(f'No chain account found for {wallet.address}')

@@ -34,6 +34,7 @@ def node_wallet(
   *,
   mnemonic: str | None = None,
   private_key: str | None = None,
+  address: str | None = None,
   public: bool = False,
   mnemonic_env: str = 'DYDX_MNEMONIC',
   private_key_env: str = 'DYDX_PRIVATE_KEY',
@@ -45,6 +46,7 @@ def node_wallet(
   Args:
     mnemonic: Wallet mnemonic passed directly by the caller.
     private_key: Hex private key passed directly by the caller, instead of `mnemonic`.
+    address: Account an API wallet key trades for. Defaults to the key's own address.
     public: Allow read-only usage when no wallet is configured.
     mnemonic_env: Environment variable used as the mnemonic fallback.
     private_key_env: Environment variable used as the private key fallback.
@@ -65,9 +67,9 @@ def node_wallet(
     if mnemonic is not None and private_key is not None:
       raise AuthError(f'Both `{mnemonic_env}` and `{private_key_env}` are set; unset one.')
   if mnemonic is not None:
-    return Wallet.from_mnemonic(mnemonic)
+    return Wallet.from_mnemonic(mnemonic, account=address)
   if private_key is not None:
-    return Wallet.from_hex(private_key)
+    return Wallet.from_hex(private_key, account=address)
   if public:
     return None
   raise AuthError(
@@ -268,6 +270,7 @@ class Node:
     usdc_denom: str = DYDX_MAINNET_USDC_DENOM,
     mnemonic: str | None = None,
     private_key: str | None = None,
+    address: str | None = None,
     public: bool = False,
     mnemonic_env: str = 'DYDX_MNEMONIC',
     private_key_env: str = 'DYDX_PRIVATE_KEY',
@@ -281,6 +284,7 @@ class Node:
       usdc_denom: USDC denomination used when building transaction fees.
       mnemonic: Optional wallet mnemonic.
       private_key: Optional hex private key, instead of `mnemonic`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       public: Allow construction without a wallet for read-only node helpers.
       mnemonic_env: Mnemonic environment variable consulted when neither `mnemonic` nor
         `private_key` is passed.
@@ -300,6 +304,7 @@ class Node:
         wallet=node_wallet(
           mnemonic=mnemonic,
           private_key=private_key,
+          address=address,
           public=public,
           mnemonic_env=mnemonic_env,
           private_key_env=private_key_env,
@@ -313,6 +318,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -324,6 +330,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -336,6 +343,7 @@ class Node:
       chain=Chain.oegs(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -346,6 +354,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -357,6 +366,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -370,6 +380,7 @@ class Node:
       comet=comet,
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -380,6 +391,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -391,6 +403,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -403,6 +416,7 @@ class Node:
       chain=Chain.polkachu(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -413,6 +427,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -424,6 +439,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -436,6 +452,7 @@ class Node:
       chain=Chain.kingnodes(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -446,6 +463,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -457,6 +475,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -469,6 +488,7 @@ class Node:
       chain=Chain.enigma(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -479,6 +499,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -490,6 +511,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -502,6 +524,7 @@ class Node:
       chain=Chain.polkachu_archive(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -512,6 +535,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -523,6 +547,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -535,6 +560,7 @@ class Node:
       chain=Chain.kingnodes_archive(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -545,6 +571,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -556,6 +583,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -568,6 +596,7 @@ class Node:
       chain=Chain.enigma_archive(modules=modules, comet=comet),
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       memo=memo,
     )
@@ -578,6 +607,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -589,6 +619,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_TESTNET_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_TESTNET_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -603,6 +634,7 @@ class Node:
       usdc_denom=DYDX_TESTNET_USDC_DENOM,
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       mnemonic_env='DYDX_TESTNET_MNEMONIC',
       private_key_env='DYDX_TESTNET_PRIVATE_KEY',
@@ -615,6 +647,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -626,6 +659,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_TESTNET_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_TESTNET_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -637,6 +671,7 @@ class Node:
     return cls.testnet_kingnodes(
       mnemonic,
       private_key=private_key,
+      address=address,
       modules=modules,
       comet=comet,
       public=public,
@@ -649,6 +684,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -660,6 +696,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_TESTNET_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_TESTNET_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -674,6 +711,7 @@ class Node:
       usdc_denom=DYDX_TESTNET_USDC_DENOM,
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       mnemonic_env='DYDX_TESTNET_MNEMONIC',
       private_key_env='DYDX_TESTNET_PRIVATE_KEY',
@@ -686,6 +724,7 @@ class Node:
     mnemonic: str | None = None,
     *,
     private_key: str | None = None,
+    address: str | None = None,
     modules: GrpcOptions | None = None,
     comet: CometOptions | None = None,
     public: bool = False,
@@ -697,6 +736,7 @@ class Node:
       mnemonic: Optional wallet mnemonic. Falls back to `DYDX_TESTNET_MNEMONIC`.
       private_key: Optional hex private key, instead of `mnemonic`. Falls back to
         `DYDX_TESTNET_PRIVATE_KEY`.
+      address: Account an API wallet key trades for. Defaults to the key's own address.
       modules: Optional gRPC transport overrides.
       comet: Optional Comet HTTP transport overrides.
       public: Allow read-only construction without a wallet.
@@ -711,6 +751,7 @@ class Node:
       usdc_denom=DYDX_TESTNET_USDC_DENOM,
       mnemonic=mnemonic,
       private_key=private_key,
+      address=address,
       public=public,
       mnemonic_env='DYDX_TESTNET_MNEMONIC',
       private_key_env='DYDX_TESTNET_PRIVATE_KEY',
