@@ -84,3 +84,16 @@ async with Aster.new(public=True) as client:
   funding = await client.futures.market.funding_rate('BTCUSDT', limit=10)
   print(mark, funding[-1]['fundingRate'])
 ```
+
+## Open Interest
+
+Open interest is served one symbol at a time, in base units. Aster does not list this
+endpoint in its API reference.
+
+```python
+from typed_aster import Aster
+
+async with Aster.new(public=True) as client:
+  oi = await client.futures.market.open_interest('BTCUSDT')
+  print(oi['openInterest'], oi['time'])
+```
