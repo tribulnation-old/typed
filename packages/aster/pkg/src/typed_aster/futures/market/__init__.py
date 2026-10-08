@@ -12,6 +12,7 @@ from .index_references import IndexReferencesEndpoint
 from .klines import Klines
 from .mark_price_klines import MarkPriceKlines
 from .market_klines import MarketKlines
+from .open_interest import OpenInterestEndpoint
 from .ping import Ping
 from .premium_index import PremiumIndex
 from .remaining_openable_notional_value import RemainingOpenableNotionalValue
@@ -35,6 +36,7 @@ class Market(
   Klines,
   MarkPriceKlines,
   MarketKlines,
+  OpenInterestEndpoint,
   Ping,
   PremiumIndex,
   RemainingOpenableNotionalValue,
