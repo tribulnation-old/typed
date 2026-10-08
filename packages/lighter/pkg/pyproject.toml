@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "typed-lighter"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
   {name="Marcel Claramunt", email="marcel@tribulnation.com"}
 ]
