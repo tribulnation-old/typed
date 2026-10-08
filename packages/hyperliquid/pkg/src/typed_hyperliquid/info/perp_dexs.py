@@ -26,13 +26,13 @@ class PerpDex(TypedDict):
   deployer: str
   """Address that deployed this perp dex."""
   deployerFeeScale: NotRequired[Decimal]
-  """Fee scale factor applied to the deployer's share of trading fees, as a decimal string."""
+  """Dex-level deployer fee scale, as a decimal string. Not observed in live `perpDexs` responses on any dex; the per-asset `deployerFeeScale` in `meta`/`allPerpMetas` is authoritative and should be used instead."""
   feeRecipient: str | None
   """Address receiving the deployer's fee share, or `null` if unset."""
   fullName: str
   """Full display name of the perp dex."""
   lastDeployerFeeScaleChangeTime: NotRequired[TimestampIso]
-  """ISO 8601 timestamp of the last change to `deployerFeeScale`."""
+  """ISO 8601 timestamp of the last change to the dex-level `deployerFeeScale`. Not observed live; see the per-asset `lastFeeScaleChangeTime` in `meta`."""
   name: str
   """Short name of the perp dex."""
   oracleUpdater: str | None
