@@ -40,6 +40,21 @@ except NetworkError:
 - include request identifiers from the provider when available
 
 
+## gRPC Errors
+
+Chain gRPC calls map grpclib failures by status, keeping the original `GRPCError` as
+`__cause__`:
+
+- transport failures, `UNAVAILABLE`, `DEADLINE_EXCEEDED`: `NetworkError`
+- `INVALID_ARGUMENT`, `NOT_FOUND`, `OUT_OF_RANGE`, `FAILED_PRECONDITION`,
+  `ALREADY_EXISTS`: `BadRequest`
+- `UNAUTHENTICATED`, `PERMISSION_DENIED`: `AuthError`
+- `RESOURCE_EXHAUSTED`: `RateLimited`
+- any other status: `ApiError`
+
+A transaction rejected by the chain is not a gRPC error: its code arrives in the
+successful broadcast response.
+
 ## ABCI Queries
 
 `chain.comet.abci_query` raises `ApiError` when the application returns a nonzero

@@ -2,9 +2,10 @@
 from .clob_pair import ClobPair
 from .clob_pairs import ClobPairs
 from .leverage import Leverage
+from .stream_orderbook_updates import StreamOrderbookUpdates
 
 
-class Clob(ClobPair, ClobPairs, Leverage):
+class Clob(ClobPair, ClobPairs, Leverage, StreamOrderbookUpdates):
   """dYdX's central limit order book (CLOB) and matching engine — the on-chain module every full node runs an in-memory order book against, matching orders by price-time priority as block proposers commit them.
 
   References:
