@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "typed-core"
-version = "0.10.0"
+version = "0.11.0"
 authors = [
   {name="Marcel Claramunt", email="marcel@tribulnation.com"}
 ]

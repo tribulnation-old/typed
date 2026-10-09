@@ -23,6 +23,7 @@ pip install typed-core
 | `typed_core.exceptions` | `Error`, `NetworkError`, `ValidationError`, `ApiError` (`BadRequest`, `AuthError`, `RateLimited`), `LogicError` |
 | `typed_core.http` | async HTTP client and response helpers |
 | `typed_core.ws` | websocket socket, streams, JSON-RPC, streams-over-RPC |
+| `typed_core.grpc` | `GrpcClient`/`GrpcEndpoint`, `wrap_exceptions` for unary calls and `server_stream` (a `StreamManager`) for server-streaming ones, mapping grpclib failures to the errors above by gRPC status (requires the `grpc` extra) |
 | `typed_core.times` | `TimeConverter`, `EpochConverter`, `IsoConverter` — parse/dump between a venue's wire timestamp and a real `datetime` |
 | `typed_core.util` | `RateLimit`, paging and stream helpers |
 
